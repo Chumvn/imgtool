@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHUM image_tool</title>
+    <meta name="description"
+        content="CHUM image_tool - Client-side image processing with skin smoothing, sharpening, backlight fix and 2048px export">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="icon" type="image/svg+xml" href="./assets/favicon.ico">
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="./assets/icons/icon-192.png">
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <div class="header-left">
+                <span class="header-logo">🖼️</span>
+                <h1>CHUM image_tool</h1>
+            </div>
+            <button id="theme-toggle" class="btn-icon" aria-label="Toggle theme" title="Toggle theme">☀️</button>
+        </div>
+    </header>
+
+    <main>
+        <div class="dashboard-grid">
+            <div class="dashboard-left">
+
+                <section id="dash-overview" class="dash-section">
+                    <div class="section-header">
+                        <h2><span class="section-icon">📸</span> Overview</h2>
+                    </div>
+                    <div class="section-body">
+                        <div id="upload-area" class="upload-area" tabindex="0" role="button" aria-label="Upload image">
+                            <div id="empty-state" class="empty-state">
+                                <div class="upload-icon-wrapper">
+                                    <span class="upload-icon">📁</span>
+                                </div>
+                                <p class="upload-title">Drop image here or click to upload</p>
+                                <p class="upload-hint">Supports JPG, PNG, WebP</p>
+                            </div>
+                            <div id="preview-area" class="preview-area" style="display:none;">
+                                <canvas id="preview-canvas"></canvas>
+                                <div class="preview-overlay">
+                                    <span>Click to change image</span>
+                                </div>
+                            </div>
+                            <input type="file" id="file-input" accept="image/*" hidden>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="dash-actions" class="dash-section">
+                    <div class="section-header">
+                        <h2><span class="section-icon">⚡</span> Quick Actions</h2>
+                    </div>
+                    <div class="section-body">
+                        <div class="action-grid">
+                            <button id="preset-facebook" class="action-btn requires-image" disabled>
+                                <span class="action-emoji">📘</span>
+                                <span class="action-label">Facebook Ready</span>
+                                <span class="action-desc">Smooth + Sharp + HD</span>
+                            </button>
+                            <button id="preset-portrait" class="action-btn requires-image" disabled>
+                                <span class="action-emoji">🤳</span>
+                                <span class="action-label">Portrait Pro</span>
+                                <span class="action-desc">Heavy smooth + Detail</span>
+                            </button>
+                            <button id="preset-backlight" class="action-btn requires-image" disabled>
+                                <span class="action-emoji">🌅</span>
+                                <span class="action-label">Backlight Fix</span>
+                                <span class="action-desc">Shadows up + Highlights down</span>
+                            </button>
+                            <button id="preset-reset" class="action-btn requires-image" disabled>
+                                <span class="action-emoji">🔄</span>
+                                <span class="action-label">Reset All</span>
+                                <span class="action-desc">Back to original</span>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <div class="dashboard-right">
+
+                <section id="dash-workspace" class="dash-section">
+                    <div class="section-header">
+                        <h2><span class="section-icon">🎨</span> Workspace</h2>
+                    </div>
+                    <div class="section-body">
+                        <div class="controls-grid">
+                            <div class="control-group">
+                                <h3 class="control-group-title">Light & Tone</h3>
+                                <div class="control-item">
+                                    <label for="slider-brightness">☀️ Brightness</label>
+                                    <div class="slider-row">
+                                        <input type="range" id="slider-brightness" class="slider requires-image"
+                                            min="-100" max="100" value="0" disabled>
+                                        <span id="value-brightness" class="slider-value">0</span>
+                                    </div>
+                                </div>
+                                <div class="control-item">
+                                    <label for="slider-contrast">🔲 Contrast</label>
+                                    <div class="slider-row">
+                                        <input type="range" id="slider-contrast" class="slider requires-image"
+                                            min="-100" max="100" value="0" disabled>
+                                        <span id="value-contrast" class="slider-value">0</span>
+                                    </div>
+                                </div>
+                                <div class="control-item">
+                                    <label for="slider-shadows">🌑 Shadows</label>
+                                    <div class="slider-row">
+                                        <input type="range" id="slider-shadows" class="slider requires-image" min="-100"
+                                            max="100" value="0" disabled>
+                                        <span id="value-shadows" class="slider-value">0</span>
+                                    </div>
+                                </div>
+                                <div class="control-item">
+                                    <label for="slider-highlights">🌕 Highlights</label>
+                                    <div class="slider-row">
+                                        <input type="range" id="slider-highlights" class="slider requires-image"
+                                            min="-100" max="100" value="0" disabled>
+                                        <span id="value-highlights" class="slider-value">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <h3 class="control-group-title">Retouch & Detail</h3>
+                                <div class="control-item">
+                                    <label for="slider-smoothing">✨ Skin Smoothing</label>
+                                    <div class="slider-row">
+                                        <input type="range" id="slider-smoothing" class="slider requires-image" min="0"
+                                            max="100" value="0" disabled>
+                                        <span id="value-smoothing" class="slider-value">0</span>
+                                    </div>
+                                </div>
+                                <div class="control-item">
+                                    <label for="slider-sharpness">🔍 Sharpness</label>
+                                    <div class="slider-row">
+                                        <input type="range" id="slider-sharpness" class="slider requires-image" min="0"
+                                            max="100" value="0" disabled>
+                                        <span id="value-sharpness" class="slider-value">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="workspace-actions">
+                            <button id="btn-apply" class="btn-primary requires-image" disabled>
+                                <span>🎯</span> Apply Changes
+                            </button>
+                            <button id="btn-download" class="btn-accent requires-image" disabled>
+                                <span>📥</span> Download 2048px JPG
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="dash-insights" class="dash-section">
+                    <div class="section-header">
+                        <h2><span class="section-icon">📊</span> Insights</h2>
+                    </div>
+                    <div class="section-body">
+                        <div class="histogram-wrapper">
+                            <canvas id="histogram-canvas" width="320" height="140"></canvas>
+                        </div>
+                        <div id="image-info" class="image-info">
+                            <p class="empty-hint">Load an image to see details</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="dash-system" class="dash-section">
+                    <div class="section-header">
+                        <h2><span class="section-icon">⚙️</span> System</h2>
+                    </div>
+                    <div class="section-body">
+                        <div class="system-grid">
+                            <div class="system-item">
+                                <span class="system-label">Theme</span>
+                                <button id="btn-theme-system" class="btn-small">Toggle Dark/Light</button>
+                            </div>
+                            <div class="system-item">
+                                <span class="system-label">Clear Data</span>
+                                <button id="btn-clear-data" class="btn-small btn-danger">Clear All</button>
+                            </div>
+                            <div class="system-item">
+                                <span class="system-label">Version</span>
+                                <span class="version-tag">v3.3</span>
+                            </div>
+                            <div class="system-item">
+                                <span class="system-label">Engine</span>
+                                <span class="version-tag">Canvas API</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 CHUM image_tool v3.3 &mdash; Client-side Image Processing</p>
+    </footer>
+
+    <div id="toast-container" class="toast-container"></div>
+    <div id="processing-overlay" class="processing-overlay" style="display:none;">
+        <div class="processing-spinner"></div>
+        <p>Processing image...</p>
+    </div>
+
+    <script src="./app.js"></script>
+</body>
+
+</html>

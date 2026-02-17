@@ -1,0 +1,25 @@
+{
+    "name": "CHUM image_tool",
+    "short_name": "image_tool",
+    "description": "Client-side image processing with skin smoothing, sharpening, backlight fix and 2048px export",
+    "start_url": "./",
+    "scope": "./",
+    "display": "standalone",
+    "background_color": "#1a1a2e",
+    "theme_color": "#1a1a2e",
+    "orientation": "any",
+    "icons": [
+        {
+            "src": "./assets/icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "./assets/icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}
